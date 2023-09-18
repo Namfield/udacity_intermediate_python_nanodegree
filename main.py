@@ -188,7 +188,7 @@ def inspect(database, pdes=None, name=None, verbose=False):
         return None
 
     # Display information about this NEO, and optionally its close approaches if verbose.
-    print(neo)
+    print(neo.serialize())
     if verbose:
         for approach in neo.approaches:
             print(f"- {approach}")

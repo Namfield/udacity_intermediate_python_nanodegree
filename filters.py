@@ -17,11 +17,13 @@ iterator.
 You'll edit this file in Tasks 3a and 3c.
 """
 import operator
+import models
+from datetime import datetime
+import itertools
 
 
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
-
 
 class AttributeFilter:
     """A general superclass for filters on comparable attributes.
@@ -49,9 +51,17 @@ class AttributeFilter:
         :param op: A 2-argument predicate comparator (such as `operator.le`).
         :param value: The reference value to compare against.
         """
+        # the operation corresponding to either <=, ==, or >= - 
+        # Python's operator module makes these available to us as operator.le, operator.eq, and operator.ge
         self.op = op
+        # the reference value to compare
         self.value = value
 
+    # makes instance objects of this type behave as callables
+    # (The __call__ magic method in Python allows an object to be called as if it were a function)
+    # "calling" the AttributeFilter with a CloseApproach object will get the attribute of interest (self.get(approach))
+    # and compare it (via self.op) to the reference value (self.value), 
+    # returning either True or False, representing whether that close approach satisfies the criterion.
     def __call__(self, approach):
         """Invoke `self(approach)`."""
         return self.op(self.get(approach), self.value)
@@ -71,6 +81,36 @@ class AttributeFilter:
     def __repr__(self):
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
+# a class supported filter on the date attribute. 
+class DateFilter(AttributeFilter):
+    # override the get method to Return the date component of the time attribute of the approach object.
+    @classmethod
+    def get(cls, approach):
+        # date() to convert the datetime object to date
+        return approach.time.date()
+
+# a class supported filter on the distance attribute. 
+class DistanceFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.distance
+
+# a class supported filter on the velocity attribute.
+class VelocityFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.velocity
+
+# a class supported filter on the diameter attribute.
+class DiameterFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.neo.diameter
+# a class supported filter on the hazardous attribute.
+class HazardousFilter(AttributeFilter):
+    @classmethod
+    def get(cls, approach):
+        return approach.neo.hazardous
 
 def create_filters(
         date=None, start_date=None, end_date=None,
@@ -109,8 +149,39 @@ def create_filters(
     :return: A collection of filters for use with `query`.
     """
     # TODO: Decide how you will represent your filters.
-    return ()
+    # we iterate through each of the input arguments and check if they have a value. 
+    # If a value is present, we create an instance of the corresponding filter class and 
+    # add it to a filters list.
+    
+    # a collection of filters
+    filters = []
 
+    # apply the filters
+    if date:
+        filters.append(DateFilter(operator.eq, date))
+    if start_date:
+        filters.append(DateFilter(operator.ge, start_date))
+    if end_date:
+        filters.append(DateFilter(operator.le, end_date))
+    if distance_min:
+        filters.append(DistanceFilter(operator.ge, distance_min))
+    if distance_max:
+        filters.append(DistanceFilter(operator.le, distance_max))
+    if velocity_min:
+        filters.append(VelocityFilter(operator.ge, velocity_min))
+    if velocity_max:
+        filters.append(VelocityFilter(operator.le, velocity_max))
+    if diameter_min:
+        filters.append(DiameterFilter(operator.ge, diameter_min))
+    if diameter_max:
+        filters.append(DiameterFilter(operator.le, diameter_max))
+    # differentiate between hazardous being False (from --not-hazardous) and None (from no option).
+    if hazardous is False:
+        filters.append(HazardousFilter(operator.eq, False))
+    elif hazardous is None:
+        filters.append(HazardousFilter(operator.is_, None))
+    
+    return filters
 
 def limit(iterator, n=None):
     """Produce a limited stream of values from an iterator.
@@ -122,4 +193,8 @@ def limit(iterator, n=None):
     :yield: The first (at most) `n` values from the iterator.
     """
     # TODO: Produce at most `n` values from the given iterator.
-    return iterator
+    if not n or n <= 0:
+        return iterator
+    else:
+        # create a new iterator that produces at n elements from the original iterator
+        return itertools.islice(iterator, n)

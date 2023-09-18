@@ -11,7 +11,8 @@ data on NEOs and close approaches extracted by `extract.load_neos` and
 
 You'll edit this file in Tasks 2 and 3.
 """
-
+from models import NearEarthObject, CloseApproach
+import filters
 
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
@@ -41,11 +42,39 @@ class NEODatabase:
         """
         self._neos = neos
         self._approaches = approaches
-
         # TODO: What additional auxiliary data structures will be useful?
-
+        # a dictionaries that map designations to the corresponding NearEarthObject instances
+        self.neo_designation_dict = {}
+        # a dictionaries that map names to the corresponding NearEarthObject instances
+        self.neo_name_dict = {}
+        
         # TODO: Link together the NEOs and their close approaches.
-
+        # iterate over the approaches and find matching designations between neos and approaches
+        for approach in self._approaches:
+            # get the designation of this approach
+            approach_designation = approach._designation
+            # look for neo with the same designation
+            if approach_designation in self.neo_designation_dict:
+                neo = self.neo_designation_dict[approach_designation]
+            else:
+                neo = None
+                # iterate over the neos to find that designation
+                for n in neos:
+                    if n.designation == approach_designation:
+                        neo = n
+                        self.neo_designation_dict[approach_designation] = n
+                        break
+            # store the NearEarthObject in the neo attribute of the CloseApproach
+            approach.neo = neo
+            # add the CloseApproach to the approaches attribute of the NearEarthObject
+            if neo:
+                neo.approaches.append(approach)
+            # store found neo name in the dictionary mapping neo name and the neo
+            if neo and neo.name:
+                name = neo.name
+                if name not in self.neo_name_dict:
+                    self.neo_name_dict[name] = neo
+    
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
 
@@ -59,8 +88,9 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-        # TODO: Fetch an NEO by its primary designation.
-        return None
+        # TODO: Fetch an NEO by its primary designation.\
+        # use get method to return None if no match is found
+        return self.neo_designation_dict.get(designation)
 
     def get_neo_by_name(self, name):
         """Find and return an NEO by its name.
@@ -77,7 +107,8 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
         # TODO: Fetch an NEO by its name.
-        return None
+        # use get method to return None if no match is found
+        return self.neo_name_dict.get(name)
 
     def query(self, filters=()):
         """Query close approaches to generate those that match a collection of filters.
@@ -91,8 +122,12 @@ class NEODatabase:
         guaranteed to be sorted meaningfully, although is often sorted by time.
 
         :param filters: A collection of filters capturing user-specified criteria.
+        (The main.py script supplies to the query method whatever was returned from the create_filters function (filters.py))
         :return: A stream of matching `CloseApproach` objects.
         """
         # TODO: Generate `CloseApproach` objects that match all of the filters.
+        # iterate over each CloseApproach object 
         for approach in self._approaches:
-            yield approach
+            # check if the CloseApproach object passes all the filters generated from create_filters()
+            if all(filter(approach) for filter in filters):
+                yield approach

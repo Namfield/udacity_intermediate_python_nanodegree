@@ -65,17 +65,19 @@ def write_to_json(results, filename):
     # Write the results to a JSON file, following the specification in the instructions.
     # the list to store each entry corresponding to each close approach
     close_approach_entries = []
-    # the dict to store info of a close approach
-    close_approach_entry = {}
     # iterate over each close approach then extract each info
     for close_approach in results:
+        # the dict to store info of a close approach
+        close_approach_entry = {}
         close_approach_entry['datetime_utc'] = close_approach.time_str
         close_approach_entry['distance_au'] = close_approach.distance
         close_approach_entry['velocity_km_s'] = close_approach.velocity
-        close_approach_entry['neo']['designation'] = close_approach.neo.designation
-        close_approach_entry['neo']['name'] = close_approach.neo.name if close_approach.neo.name else ''
-        close_approach_entry['neo']['diameter_km'] = close_approach.neo.diameter
-        close_approach_entry['neo']['potentially_hazardous'] = True if close_approach.neo.hazardous else False
+        close_approach_entry['neo'] = {
+            'designation': close_approach.neo.designation,
+            'name': close_approach.neo.name if close_approach.neo.name else '',
+            'diameter_km': close_approach.neo.diameter,
+            'potentially_hazardous': close_approach.neo.hazardous
+        }
         # store each close approach entry to a list
         close_approach_entries.append(close_approach_entry)
     # write the all close_approaches to a json file

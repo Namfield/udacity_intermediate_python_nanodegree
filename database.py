@@ -22,6 +22,7 @@ class NEODatabase:
     help fetch NEOs by primary designation or by name and to help speed up
     querying for close approaches that match criteria.
     """
+
     def __init__(self, neos, approaches):
         """Create a new `NEODatabase`.
 
@@ -42,13 +43,13 @@ class NEODatabase:
         """
         self._neos = neos
         self._approaches = approaches
-        # TODO: What additional auxiliary data structures will be useful?
+        # What additional auxiliary data structures will be useful?
         # a dictionaries that map designations to the corresponding NearEarthObject instances
         self.neo_designation_dict = {}
         # a dictionaries that map names to the corresponding NearEarthObject instances
         self.neo_name_dict = {}
         
-        # TODO: Link together the NEOs and their close approaches.
+        # Link together the NEOs and their close approaches.
         # iterate over the approaches and find matching designations between neos and approaches
         for approach in self._approaches:
             # get the designation of this approach
@@ -88,7 +89,7 @@ class NEODatabase:
         :param designation: The primary designation of the NEO to search for.
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
-        # TODO: Fetch an NEO by its primary designation.\
+        # Fetch an NEO by its primary designation.\
         # use get method to return None if no match is found
         return self.neo_designation_dict.get(designation)
 
@@ -106,7 +107,7 @@ class NEODatabase:
         :param name: The name, as a string, of the NEO to search for.
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
-        # TODO: Fetch an NEO by its name.
+        # Fetch an NEO by its name.
         # use get method to return None if no match is found
         return self.neo_name_dict.get(name)
 
@@ -125,7 +126,7 @@ class NEODatabase:
         (The main.py script supplies to the query method whatever was returned from the create_filters function (filters.py))
         :return: A stream of matching `CloseApproach` objects.
         """
-        # TODO: Generate `CloseApproach` objects that match all of the filters.
+        # Generate `CloseApproach` objects that match all of the filters.
         # iterate over each CloseApproach object 
         for approach in self._approaches:
             # check if the CloseApproach object passes all the filters generated from create_filters()

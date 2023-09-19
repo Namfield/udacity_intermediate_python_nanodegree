@@ -8,7 +8,7 @@ the main module and originate from the user's command-line options.
 This function can be thought to return a collection of instances of subclasses
 of `AttributeFilter` - a 1-argument callable (on a `CloseApproach`) constructed
 from a comparator (from the `operator` module), a reference value, and a class
-method `get` that subclasses can override to fetch an attribute of interest from
+method `get` that subclasses can Override to fetch an attribute of interest from
 the supplied `CloseApproach`.
 
 The `limit` function simply limits the maximum number of values produced by an
@@ -37,9 +37,10 @@ class AttributeFilter:
     calling the filter (with __call__) executes `get(approach) OP value` (in
     infix notation).
 
-    Concrete subclasses can override the `get` classmethod to provide custom
+    Concrete subclasses can Override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -70,7 +71,7 @@ class AttributeFilter:
     def get(cls, approach):
         """Get an attribute of interest from a close approach.
 
-        Concrete subclasses must override this method to get an attribute of
+        Concrete subclasses must Override this method to get an attribute of
         interest from the supplied `CloseApproach`.
 
         :param approach: A `CloseApproach` on which to evaluate this filter.
@@ -79,37 +80,52 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """Return a string representation of the class AttributeFilter."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 # a class supported filter on the date attribute. 
 class DateFilter(AttributeFilter):
-    # override the get method to Return the date component of the time attribute of the approach object.
+    """A derived class to filter the date attribute of a given CloseApproach."""
+
     @classmethod
     def get(cls, approach):
+        """Override the get method to Return the date component of the time attribute of the approach object."""
         # date() to convert the datetime object to date
         return approach.time.date()
 
 # a class supported filter on the distance attribute. 
 class DistanceFilter(AttributeFilter):
+    """A derived class to filter the distance attribute of a given CloseApproach."""
+
     @classmethod
     def get(cls, approach):
+        """Override the get method to Return the distance attribute of the approach object."""
         return approach.distance
 
 # a class supported filter on the velocity attribute.
 class VelocityFilter(AttributeFilter):
+    """A derived class to filter the velocity attribute of a given CloseApproach."""
+
     @classmethod
     def get(cls, approach):
+        """Override the get method to Return the velocity attribute of the approach object."""
         return approach.velocity
 
 # a class supported filter on the diameter attribute.
 class DiameterFilter(AttributeFilter):
+    """A derived class to filter the diameter attribute of a given CloseApproach."""
+
     @classmethod
     def get(cls, approach):
+        """Override the get method to Return the diameter attribute of the approach object."""
         return approach.neo.diameter
 # a class supported filter on the hazardous attribute.
 class HazardousFilter(AttributeFilter):
+    """A derived class to filter the hazardous attribute of a given CloseApproach."""
+
     @classmethod
     def get(cls, approach):
+        """Override the get method to Return the hazardous attribute of the approach object."""
         return approach.neo.hazardous
 
 def create_filters(
@@ -148,7 +164,7 @@ def create_filters(
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
+    # Decide how you will represent your filters.
     # we iterate through each of the input arguments and check if they have a value. 
     # If a value is present, we create an instance of the corresponding filter class and 
     # add it to a filters list.
@@ -176,10 +192,8 @@ def create_filters(
     if diameter_max:
         filters.append(DiameterFilter(operator.le, diameter_max))
     # differentiate between hazardous being False (from --not-hazardous) and None (from no option).
-    if hazardous is False:
-        filters.append(HazardousFilter(operator.eq, False))
-    elif hazardous is None:
-        filters.append(HazardousFilter(operator.is_, None))
+    if hazardous is not None:
+        filters.append(HazardousFilter(operator.eq, hazardous))
     
     return filters
 
@@ -192,7 +206,7 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-    # TODO: Produce at most `n` values from the given iterator.
+    # Produce at most `n` values from the given iterator.
     if not n or n <= 0:
         return iterator
     else:

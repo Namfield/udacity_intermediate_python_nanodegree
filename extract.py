@@ -18,13 +18,12 @@ import json
 from models import NearEarthObject, CloseApproach
 
 def load_neos(neo_csv_path):
-    """Read near-Earth object information from a CSV file 
-    and extracting the relevant information to create instances of the NearEarthObject class.
+    """Read near-Earth object information from a CSV file and extracting the relevant information to create instances of the NearEarthObject class.
 
     :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
     :return: A collection of `NearEarthObject`s.
     """
-    # TODO: Load NEO data from the given CSV file.
+    # Load NEO data from the given CSV file.
     # a list to store all neo instances
     neos = []
 
@@ -50,7 +49,7 @@ def load_approaches(cad_json_path):
     :param cad_json_path: A path to a JSON file containing data about close approaches.
     :return: A collection of `CloseApproach`es.
     """
-    # TODO: Load close approach data from the given JSON file.
+    # Load close approach data from the given JSON file.
     # a list to store all CloseApproach instances
     approaches = []
     

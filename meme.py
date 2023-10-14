@@ -25,7 +25,10 @@ def generate_meme(path=None, body=None, author=None):
             imgs = [os.path.join(root, name) for name in files]
 
         # choose a random image from default images
-        img = random.choice(imgs)
+        if len(imgs) == 0:
+            print("There is no image to generate a meme")
+        else:
+            img = random.choice(imgs)
     else:
         # get the input image path
         img = path[0]
@@ -45,7 +48,10 @@ def generate_meme(path=None, body=None, author=None):
             quotes.extend(Ingestor.parse(f))
 
         # choose a random quote from default quotes
-        quote = random.choice(quotes)
+        if len(quotes) == 0:
+            print("There is no quote to generate the meme")
+        else:
+            quote = random.choice(quotes)
     else:
         if author is None:
             raise Exception('Author Required if Body is Used')
@@ -54,9 +60,13 @@ def generate_meme(path=None, body=None, author=None):
 
     # create a meme object with specifying to save manipulated images into a new directory
     meme = MemeGenerator('./output')
-    path = meme.make_meme(img, quote.body, quote.author)
-    return path
+    if quote is None:
+        print("There is no quote to generate the meme")
+        return None
+    else:
+        path = meme.make_meme(img, quote.body, quote.author)
 
+    return path
 
 if __name__ == "__main__":
     """Parse the following CLI arguments:
@@ -65,8 +75,8 @@ if __name__ == "__main__":
         author - quote author to add to the image
     """
     cli_parser = argparse.ArgumentParser(description='Get image path and quote')
-    cli_parser.add_argument('path')
-    cli_parser.add_argument('body')
-    cli_parser.add_argument('author')
+    cli_parser.add_argument('path', nargs='?', default=None)
+    cli_parser.add_argument('body', nargs='?', default=None)
+    cli_parser.add_argument('author', nargs='?', default=None)
     args = cli_parser.parse_args()
     print(generate_meme(args.path, args.body, args.author))

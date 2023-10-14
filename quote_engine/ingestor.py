@@ -11,7 +11,7 @@ from quote_engine import (
                         ,DOCXIngestor
                         ,CSVIngestor
                         ,PDFIngestor
-                        ,TxtIngestor
+                        ,TXTIngestor
 )
 
 class Ingestor(IngestorInterface):
@@ -22,7 +22,7 @@ class Ingestor(IngestorInterface):
     
     def __init__(self, path):
         """Initialize the list of ingestors"""
-        self.ingestors = [DOCXIngestor(), CSVIngestor(), PDFIngestor(), TxtIngestor()]
+        self.ingestors = [DOCXIngestor(), CSVIngestor(), PDFIngestor(), TXTIngestor()]
     
     @classmethod
     def can_ingest(cls, path: str) -> bool:
@@ -34,9 +34,13 @@ class Ingestor(IngestorInterface):
     def parse(cls, path: str) -> list[QuoteModel]:
         """Parse the file if supported and extract the quotes
         """
+        # a list of parsed quotes from a file
+        quotes = []
+
         for ingestor in cls.ingestors:
             if ingestor.can_ingest(path):
                 quotes = ingestor.parse(path)
+                break
 
         return quotes
             

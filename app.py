@@ -13,7 +13,6 @@ app = Flask(__name__)
 # a meme instance
 meme = MemeGenerator('./static')
 
-
 def setup():
     """Load all necessary resources for the application."""
     # a list of all quote files

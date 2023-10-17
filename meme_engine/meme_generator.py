@@ -40,7 +40,7 @@ class MemeGenerator:
         ratio = width/float(img.size[0])
         height = int(ratio * float(img.size[1]))
         # resize the image
-        img = img.resize(width, height)
+        img = img.resize((width, height))
 
         """Add quote to the image
         """
@@ -56,13 +56,20 @@ class MemeGenerator:
         # define color of the text
         text_color = "blue"
         # define the font of the text
-        font = ImageFont.truetype('LilitaOne-Regular.ttf')
+        font = ImageFont.truetype("arial.ttf", size=14)
         # add the text
         draw_img.text(text_coords, text_content, fill = text_color, font = font)
 
         """Save the image
         """
-        out_img_path = os.path.join(self.out_path, get_current_time() + ".jpg")
+        # out_img_path = os.path.join(self.out_path, get_current_time() + ".jpg")
+        # img.save(out_img_path)
+        # Check if the output directory exists, create it if it doesn't
+        if not os.path.exists(self.out_path):
+            os.makedirs(self.out_path)
+        # Generate the output file name
+        file_name = get_current_time() + ".jpg"
+        out_img_path = os.path.join(self.out_path, file_name)
         img.save(out_img_path)
         
         return out_img_path

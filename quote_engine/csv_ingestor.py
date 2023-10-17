@@ -5,6 +5,7 @@ from quote_engine import (
                          QuoteModel
                         ,IngestorInterface
 )
+import pandas as pd
 
 class CSVIngestor(IngestorInterface):
     """This class is responsible for parsing CSV files"""
@@ -23,7 +24,7 @@ class CSVIngestor(IngestorInterface):
         # file_extension = path.split('.')[-1]
 
         # return file_extension in cls.allowed_extensions
-        return path.endswith('.txt')
+        return path.endswith('.csv')
 
     @classmethod
     def parse(cls, path: str) -> list[QuoteModel]:
@@ -37,13 +38,11 @@ class CSVIngestor(IngestorInterface):
 
         try:
             with open(path, 'r') as file:
+                csv_reader = pd.read_csv(path, header=0)
                 # parse line by line
-                for line in file:
-                    """extract body and author
-                    strip(): remove any leading or trailing whitespace characters
-                    split(,): split the line into a list of values based on the comma (,) delimiter
-                    """
-                    body, author = line.strip().split(',')
+                for _, row in csv_reader.iterrows():
+                    body = row['body']
+                    author = row['author']
                     # create a corresponding QuoteModel object
                     quote = QuoteModel(body, author)
                     # store in the quotes list
@@ -51,6 +50,6 @@ class CSVIngestor(IngestorInterface):
         except FileNotFoundError:
             print(f"File not found: {path}")
         except Exception as e:
-            print(f"There is error {str(e)} when parsing the file {path}")
+            print(f"There is error \"{str(e)}\" when parsing the file {path}")
 
         return quotes

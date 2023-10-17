@@ -31,7 +31,7 @@ def generate_meme(path=None, body=None, author=None):
             img = random.choice(imgs)
     else:
         # get the input image path
-        img = path[0]
+        img = path
 
     if body is None:
         # the list of all default quote files
@@ -59,12 +59,11 @@ def generate_meme(path=None, body=None, author=None):
         quote = QuoteModel(body, author)
 
     # create a meme object with specifying to save manipulated images into a new directory
-    meme = MemeGenerator('./output')
+    meme = MemeGenerator('.\output')
     if quote is None:
-        print("There is no quote to generate the meme")
         return None
     else:
-        path = meme.make_meme(img, quote.body, quote.author)
+        path = meme.make_meme(img, quote.quote_body, quote.author)
 
     return path
 
@@ -75,8 +74,11 @@ if __name__ == "__main__":
         author - quote author to add to the image
     """
     cli_parser = argparse.ArgumentParser(description='Get image path and quote')
-    cli_parser.add_argument('path', nargs='?', default=None)
-    cli_parser.add_argument('body', nargs='?', default=None)
-    cli_parser.add_argument('author', nargs='?', default=None)
+    cli_parser.add_argument('--path', type=str, nargs='?', default=None, 
+                            help='The path to an image file')
+    cli_parser.add_argument('--body', type=str, nargs='?', default=None,
+                            help='The quote content to add to the image')
+    cli_parser.add_argument('--author', type=str, nargs='?', default=None,
+                            help='The author of the quote')
     args = cli_parser.parse_args()
     print(generate_meme(args.path, args.body, args.author))

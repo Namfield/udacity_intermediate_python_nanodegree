@@ -51,6 +51,6 @@ class TXTIngestor(IngestorInterface):
         except FileNotFoundError:
             print(f"File not found: {path}")
         except Exception as e:
-            print(f"There is error {str(e)} when parsing the file {path}")
+            print(f"There is error \"{str(e)}\" when parsing the file {path}")
 
         return quotes

@@ -42,6 +42,10 @@ class DOCXIngestor(IngestorInterface):
                 text = paragraph.text.strip()
                 # parse each line of the paragraph
                 for line in text.split('\n'):
+                    # check if the line is empty
+                    if line.strip() == '':
+                        # stop parsing when encountering an empty line
+                        break
                     """extract body and author
                     strip(): remove any leading or trailing whitespace characters
                     split(' - '): split the line into a list of values based on the comma (,) delimiter
@@ -54,7 +58,7 @@ class DOCXIngestor(IngestorInterface):
         except FileNotFoundError:
             print(f"File not found: {path}")
         except Exception as e:
-            print(f"There is error {str(e)} when parsing the file {path}")
+            print(f"There is error \"{str(e)}\" when parsing the file {path}")
 
         return quotes
 

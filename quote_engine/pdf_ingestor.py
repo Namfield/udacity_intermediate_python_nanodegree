@@ -43,22 +43,24 @@ class PDFIngestor(IngestorInterface):
                 # parse each pdf file page
                 for page in pdf_file.pages:
                     # get the content of the page
-                    text = page.extractText()
+                    text = page.extract_text()
                     # parse each line of the pdf page
                     for line in text.split('\n'):
                         """extract body and author
                         strip(): remove any leading or trailing whitespace characters
                         split(' - '): split the line into a list of values based on the comma (,) delimiter
                         """
-                        body, author = line.strip().split(' - ')
-                        # create a corresponding QuoteModel object
-                        quote = QuoteModel(body, author)
-                        # store in the quotes list
-                        quotes.append(quote)
+                        line_values = line.strip().split(' - ')
+                        if len(line_values) == 2:
+                            body, author = line.strip().split(' - ')
+                            # create a corresponding QuoteModel object
+                            quote = QuoteModel(body, author)
+                            # store in the quotes list
+                            quotes.append(quote)
         except FileNotFoundError:
             print(f"File not found: {path}")
         except Exception as e:
-            print(f"There is error {str(e)} when parsing the file {path}")
+            print(f"There is error \"{str(e)}\" when parsing the file {path}")
 
         return quotes
     

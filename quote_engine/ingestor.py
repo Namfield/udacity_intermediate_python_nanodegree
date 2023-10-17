@@ -18,11 +18,11 @@ class Ingestor(IngestorInterface):
     """The class to select an appropriate module for parsing the corresponding"""
     
     # the list of all ingestor helper classes
-    ingestors = []
+    ingestors = [DOCXIngestor(), CSVIngestor(), PDFIngestor(), TXTIngestor()]
     
-    def __init__(self, path):
-        """Initialize the list of ingestors"""
-        self.ingestors = [DOCXIngestor(), CSVIngestor(), PDFIngestor(), TXTIngestor()]
+    # def __init__(self, path):
+    #     """Initialize the list of ingestors"""
+    #     self.ingestors = [DOCXIngestor(), CSVIngestor(), PDFIngestor(), TXTIngestor()]
     
     @classmethod
     def can_ingest(cls, path: str) -> bool:

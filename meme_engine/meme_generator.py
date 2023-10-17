@@ -56,7 +56,7 @@ class MemeGenerator:
         # define color of the text
         text_color = "blue"
         # define the font of the text
-        font = ImageFont.truetype("arial.ttf", size=14)
+        font = ImageFont.truetype('LilitaOne-Regular.ttf', size=14)
         # add the text
         draw_img.text(text_coords, text_content, fill = text_color, font = font)
 

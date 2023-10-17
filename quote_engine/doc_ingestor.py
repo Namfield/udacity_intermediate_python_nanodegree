@@ -17,9 +17,6 @@ class DOCXIngestor(IngestorInterface):
         Returns:
             True if the path is a docx file
         """
-        # # splits the path by '.' and compares the last element with the allowed extensions.
-        # file_extension = path.split('.')[-1]
-
         # return file_extension in cls.allowed_extensions
         return path.endswith('.docx')
 
@@ -61,29 +58,3 @@ class DOCXIngestor(IngestorInterface):
             print(f"There is error \"{str(e)}\" when parsing the file {path}")
 
         return quotes
-
-
-
-
-# def parse(cls, path: str) -> List[QuoteModel]:
-#         quotes = []
-#         try:
-#             doc = Document(path)
-            
-#             for paragraph in doc.paragraphs:
-#                 # Assuming each paragraph contains a quote in the format "body - author"
-#                 # Split the paragraph text into body and author using the dash as the delimiter
-#                 text = paragraph.text.strip()
-#                 if '-' in text:
-#                     body, author = text.split('-')
-#                     quote = QuoteModel(body.strip(), author.strip())
-#                     quotes.append(quote)
-            
-#             return quotes
-#         except FileNotFoundError:
-#             print(f"File not found: {path}")
-#         except Exception as e:
-#             print(f"An error occurred while parsing the DOCX file: {path}")
-#             print(f"Error details: {str(e)}")
-        
-#         return quotes

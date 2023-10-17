@@ -20,9 +20,6 @@ class CSVIngestor(IngestorInterface):
         Returns:
             True if the path is a CSV file
         """
-        # # splits the path by '.' and compares the last element with the allowed extensions.
-        # file_extension = path.split('.')[-1]
-
         # return file_extension in cls.allowed_extensions
         return path.endswith('.csv')
 

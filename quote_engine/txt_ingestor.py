@@ -1,6 +1,4 @@
 """Strategy object for the txt file type."""
-# from .quote_model import QuoteModel
-# from .ingestor_interface import IngestorInterface
 from quote_engine import ( 
                          QuoteModel
                         ,IngestorInterface
@@ -19,9 +17,6 @@ class TXTIngestor(IngestorInterface):
         Returns:
             True if the path is a txt file
         """
-        # # splits the path by '.' and compares the last element with the allowed extensions.
-        # file_extension = path.split('.')[-1]
-
         # return file_extension in cls.allowed_extensions
         return path.endswith('.txt')
 

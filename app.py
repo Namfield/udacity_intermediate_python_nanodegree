@@ -79,7 +79,7 @@ def meme_post():
     to the meme_form() function"""
     # 1. Use requests module to save the image from the image_url
     #    form param to a temp local file.
-    img_url = requests.form.get('img_url')
+    img_url = request.form.get('img_url')
     # 2. Use the meme object to generate a meme using this temp
     #    file and the body and author form paramaters.
     if img_url:
